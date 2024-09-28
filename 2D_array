@@ -1,5 +1,8 @@
 int[][] grid = {{1, 2, 1, 2}, {3, 4, 1, 2}, {2, 1, 3, 4}};
 int rows, cols, w, h,;
+int firstClicky = -1;
+int firstClickx = -1;
+boolean[][] showcard;
 
 void setup() {
     size(500, 500);
@@ -11,20 +14,19 @@ void setup() {
     w = width / cols;
     h = height / rows;
     update(grid, 1);
+
+    showcard = new boolean[rows][cols];
 }
 
 
 void update(int[][] a, int d) { // array is passed by reference?
     int i = 0;
     while (i < a.length) {
-
         int j = 0;
         while (j < a[0].length) {
-
             a[i][j] = a[i][j] + d;
             j++;
         }
-
         i++;
     }
 }
@@ -32,35 +34,53 @@ void update(int[][] a, int d) { // array is passed by reference?
 void draw() {
     int i = 0;
     while (i < rows) {
-      int j = 0;
-      while (j < cols) {
-        if (showcard[i][j]) {
-          strokeWeight(2);
-          fill(255);
-          rect(j * w, i * h, w, h);
-          strokeWeight(12);
-          draw_lines(10 + j * w, 10 + i * h, grid[i][j]);
-        } else {
-          strokeWeight(2);
-          fill(50);
-          rect(j * w, i * h, w, h);
+        int j = 0;
+        while (j < cols) {
+            if (showcard[i][j]) {
+                strokeWeight(2);
+                fill(255);
+                rect(j * w, i * h, w, h);
+                strokeWeight(12);
+                draw_lines(10 + j * w, 10 + i * h, grid[i][j]);
+            } else {
+                strokeWeight(2);
+                fill(50);
+                rect(j * w, i * h, w, h);
+            }
+            j++;
         }
-       j++;
-      }
-      i++;
+        i++;
     }
 }
 
 void draw_lines(int x, int y, int n) {
     int i = 0;
     while (i < n) {
-
         line(x + i * 20, y, x + i * 20, y + 40);
         i++;
     }
 }
 
 void mousePressed() {
-  int clickx = mouseX / w;
-  int clicky = mouseY / h;
+    int clickx = mouseX / w;
+    int clicky = mouseY / h;
+
+if (clickx >= 0 && clickx < cols && clicky >= 0 && clicky < rows && !showcard[clicky][clickx]) {
+    if (firstClicky == -1) {
+        firstClicky = clicky;
+        firstClickx = clickx;
+        showcard[firstClicky][firstClickx] = true;
+        showcard[clicky][clickx] = true;
+    } else {
+        showcard[firstClicky][firstClickx] = true;
+        showcard[clicky][clickx] = true;
+        if (grid[firstClicky][firstClickx] != grid[clicky][clickx]) {
+            delay(500);
+            showcard[clicky][clickx] = false;
+            showcard[firstClicky][firstClickx] = false;
+        }
+        firstClicky = -1;
+        firstClickx = -1;
+        }
+    }
 }
