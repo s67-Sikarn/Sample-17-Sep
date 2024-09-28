@@ -6,8 +6,9 @@ boolean[][] showcard;
 
 void setup() {
     size(500, 500);
+    textSize(32);
+    textAlign(CENTER, CENTER);
     strokeWeight(12);
-    background(255);
 
     rows = grid.length;
     cols = grid[0].length;
@@ -33,6 +34,7 @@ void update(int[][] a, int d) { // array is passed by reference?
 }
 
 void draw() {
+    background(255);
     if (correct < rows * cols /2){
         int i = 0;
         while (i < rows) {
